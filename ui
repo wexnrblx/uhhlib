@@ -1,0 +1,40 @@
+local UILib = {}
+
+function UILib.CreateWindow(title)
+    local ScreenGui = Instance.new("ScreenGui")
+    local Frame = Instance.new("Frame")
+    local Title = Instance.new("TextLabel")
+
+    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    ScreenGui.Name = "CustomUILib"
+
+    Frame.Parent = ScreenGui
+    Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Frame.Size = UDim2.new(0, 300, 0, 200)
+    Frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+
+    Title.Parent = Frame
+    Title.Text = title
+    Title.Size = UDim2.new(1, 0, 0, 30)
+    Title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    local Window = {}
+    Window.Frame = Frame
+
+    function Window:AddButton(text, callback)
+        local Button = Instance.new("TextButton")
+        Button.Parent = Frame
+        Button.Size = UDim2.new(1, -20, 0, 30)
+        Button.Position = UDim2.new(0, 10, 0, #Frame:GetChildren() * 35)
+        Button.Text = text
+        Button.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+        Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+        Button.MouseButton1Click:Connect(callback)
+    end
+
+    return Window
+end
+
+return UILib
