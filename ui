@@ -21,6 +21,8 @@ function UILib:CreateWindow(title)
     back.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     back.Position = UDim2.new(0.5, 0, 0.5, 0)
     back.Size = UDim2.new(0, 500, 0, 300)
+back.Active = true
+    back.Draggable = true
 
     UICorner.Parent = back
 
