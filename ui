@@ -3,18 +3,15 @@ local UILib = {}
 function UILib.CreateWindow(title)
     local ScreenGui = Instance.new("ScreenGui")
     local Frame = Instance.new("Frame")
-    local Frame_2 = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
     local TOP = Instance.new("Frame")
     local uilibname = Instance.new("TextLabel")
     local closebutton = Instance.new("TextButton")
     local blankcizgi = Instance.new("Frame")
-    local UICorner_4 = Instance.new("UICorner")
     local ScrollingFrame = Instance.new("ScrollingFrame")
     local UIListLayout = Instance.new("UIListLayout")
 
     ScreenGui.Parent = game.CoreGui
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
     Frame.Parent = ScreenGui
     Frame.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -22,20 +19,13 @@ function UILib.CreateWindow(title)
     Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
     Frame.Size = UDim2.new(0, 440, 0, 300)
     Frame.Active = true
-    Frame.Draggable = true -- Sürüklenebilir
+    Frame.Draggable = true 
 
-    Frame_2.Parent = Frame
-    Frame_2.AnchorPoint = Vector2.new(0.5, 0.5)
-    Frame_2.BackgroundColor3 = Color3.fromRGB(27, 27, 27)
-    Frame_2.Position = UDim2.new(0.5, 0, 0.55, 0)
-    Frame_2.Size = UDim2.new(0, 428, 0, 260)
+    UICorner.Parent = Frame
 
-    UICorner.Parent = Frame_2
-
-    TOP.Name = "TOP"
     TOP.Parent = Frame
     TOP.BackgroundTransparency = 1.000
-    TOP.Size = UDim2.new(0, 428, 0, 36)
+    TOP.Size = UDim2.new(1, 0, 0, 36)
 
     uilibname.Parent = TOP
     uilibname.BackgroundTransparency = 1.000
@@ -63,32 +53,25 @@ function UILib.CreateWindow(title)
     blankcizgi.AnchorPoint = Vector2.new(0.5, 0.5)
     blankcizgi.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
     blankcizgi.Position = UDim2.new(0.5, 0, 1, 0)
-    blankcizgi.Size = UDim2.new(0, 428, 0, 2)
-    blankcizgi.ZIndex = 3
-    UICorner_4.Parent = blankcizgi
+    blankcizgi.Size = UDim2.new(1, 0, 0, 2)
 
-    -- ScrollingFrame (Butonlar buraya eklenecek)
-    ScrollingFrame.Parent = Frame_2
+    -- **ScrollingFrame (Taşmayı Engellemek İçin)**
+    ScrollingFrame.Parent = Frame
     ScrollingFrame.BackgroundTransparency = 1.000
-    ScrollingFrame.Size = UDim2.new(1, -10, 1, -10)
-    ScrollingFrame.Position = UDim2.new(0, 5, 0, 5)
-    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0) -- Buton ekledikçe artacak
+    ScrollingFrame.Size = UDim2.new(1, -10, 1, -50)
+    ScrollingFrame.Position = UDim2.new(0, 5, 0, 40)
+    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
     ScrollingFrame.ScrollBarThickness = 5
     ScrollingFrame.ClipsDescendants = true
+    ScrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y -- **Butonlar arttıkça kaydırma alanı genişleyecek**
 
-    -- UIListLayout (Butonları otomatik hizalayacak)
+    -- **UIListLayout (Butonların Otomatik Sıralanması)**
     UIListLayout.Parent = ScrollingFrame
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     UIListLayout.Padding = UDim.new(0, 5)
-
-    -- Buton eklendikçe kaydırma çubuğunu ayarlayan fonksiyon
-    local function UpdateCanvasSize()
-        ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
-    end
-    UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(UpdateCanvasSize)
+    UIListLayout.FillDirection = Enum.FillDirection.Vertical
 
     local Window = {}
-    Window.Frame = Frame
     Window.ScrollingFrame = ScrollingFrame
 
     function Window:AddButton(text, callback)
@@ -97,7 +80,7 @@ function UILib.CreateWindow(title)
 
         Button.Parent = ScrollingFrame
         Button.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
-        Button.Size = UDim2.new(0.9, 0, 0, 40)
+        Button.Size = UDim2.new(0.95, 0, 0, 40) -- **Genişliği orantılı yapıldı**
         Button.Font = Enum.Font.GothamBold
         Button.Text = text
         Button.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -106,9 +89,6 @@ function UILib.CreateWindow(title)
         Button.MouseButton1Click:Connect(callback)
 
         UICorner.Parent = Button
-
-        -- Kaydırma boyutunu güncelle
-        UpdateCanvasSize()
     end
 
     return Window
