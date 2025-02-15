@@ -19,7 +19,7 @@ local UIListLayout = Instance.new("UIListLayout")
 
 --Properties:
 
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 back.Name = "back"
@@ -30,6 +30,8 @@ back.BorderColor3 = Color3.fromRGB(0, 0, 0)
 back.BorderSizePixel = 0
 back.Position = UDim2.new(0.5, 0, 0.5, 0)
 back.Size = UDim2.new(0, 500, 0, 300)
+back.Active = true
+back.Draggable = true
 
 UICorner.Parent = back
 
@@ -90,6 +92,9 @@ TextButton_2.Font = Enum.Font.Unknown
 TextButton_2.Text = "X"
 TextButton_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextButton_2.TextSize = 14.000
+TextButton_2.MouseButton1Click:Connect(function()
+        ScreenGui:Destroy()
+    end)
 
 cizgi.Name = "cizgi"
 cizgi.Parent = topframe
