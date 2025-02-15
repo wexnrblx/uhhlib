@@ -1,132 +1,104 @@
 local UILib = {}
 
-function UILib.CreateWindow(title)
-    -- GUI Yapısı
+function UILib.CreateWindow()
     local ScreenGui = Instance.new("ScreenGui")
     local back = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
     local mainarea = Instance.new("ScrollingFrame")
     local topframe = Instance.new("Frame")
-    local titleLabel = Instance.new("TextLabel")
-    local closeButton = Instance.new("TextButton")
+    local TextLabel = Instance.new("TextLabel")
+    local TextButton_2 = Instance.new("TextButton")
     local cizgi = Instance.new("Frame")
+    local cizgi_2 = Instance.new("Frame")
     local tabs = Instance.new("ScrollingFrame")
     local UIListLayout = Instance.new("UIListLayout")
-    
-    -- Parent Ayarları
+
     ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    
-    -- Ana UI Çerçevesi
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    back.Name = "back"
     back.Parent = ScreenGui
     back.AnchorPoint = Vector2.new(0.5, 0.5)
     back.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     back.Position = UDim2.new(0.5, 0, 0.5, 0)
     back.Size = UDim2.new(0, 500, 0, 300)
-    back.BorderSizePixel = 0
-    back.Active = true
-    back.Draggable = true
     UICorner.Parent = back
 
-    -- Üst Çubuk
+    mainarea.Name = "mainarea"
+    mainarea.Parent = back
+    mainarea.Active = true
+    mainarea.BackgroundTransparency = 1.0
+    mainarea.Position = UDim2.new(0.286, 0, 0.196, 0)
+    mainarea.Size = UDim2.new(0, 350, 0, 241)
+
+    topframe.Name = "topframe"
     topframe.Parent = back
-    topframe.Size = UDim2.new(1, 0, 0, 40)
-    topframe.BackgroundTransparency = 1
+    topframe.BackgroundTransparency = 1.0
+    topframe.Size = UDim2.new(0, 500, 0, 69)
 
-    -- Başlık
-    titleLabel.Parent = topframe
-    titleLabel.Text = title
-    titleLabel.Size = UDim2.new(0, 300, 0, 31)
-    titleLabel.Position = UDim2.new(0.02, 0, 0.2, 0)
-    titleLabel.Font = Enum.Font.Michroma
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    titleLabel.TextScaled = true
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.Parent = topframe
+    TextLabel.BackgroundTransparency = 1.0
+    TextLabel.Position = UDim2.new(0.022, 0, 0.173, 0)
+    TextLabel.Size = UDim2.new(0, 300, 0, 31)
+    TextLabel.Font = Enum.Font.Michroma
+    TextLabel.Text = "My UI Lib"
+    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.TextScaled = true
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Kapat Butonu
-    closeButton.Parent = topframe
-    closeButton.Size = UDim2.new(0, 30, 0, 30)
-    closeButton.Position = UDim2.new(0.93, 0, 0.1, 0)
-    closeButton.Text = "X"
-    closeButton.Font = Enum.Font.GothamBold
-    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-    closeButton.BorderSizePixel = 0
-    closeButton.MouseButton1Click:Connect(function()
-        ScreenGui:Destroy()
-    end)
+    TextButton_2.Parent = topframe
+    TextButton_2.BackgroundTransparency = 1.0
+    TextButton_2.Position = UDim2.new(0.936, 0, 0, 0)
+    TextButton_2.Size = UDim2.new(0, 25, 0, 52)
+    TextButton_2.Text = "X"
+    TextButton_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-    -- Sekmeler (Sol Taraf)
+    cizgi.Name = "cizgi"
+    cizgi.Parent = topframe
+    cizgi.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+    cizgi.Position = UDim2.new(0, 0, 0.71, 0)
+    cizgi.Size = UDim2.new(0, 500, 0, 3)
+
+    cizgi_2.Name = "cizgi_2"
+    cizgi_2.Parent = back
+    cizgi_2.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+    cizgi_2.Position = UDim2.new(0.028, 0, 0.573, 0)
+    cizgi_2.Rotation = 90
+    cizgi_2.Size = UDim2.new(0, 249, 0, 4)
+
+    tabs.Name = "tabs"
     tabs.Parent = back
-    tabs.Size = UDim2.new(0, 120, 1, -40)
-    tabs.Position = UDim2.new(0, 10, 0, 50)
-    tabs.BackgroundTransparency = 1
+    tabs.Active = true
+    tabs.BackgroundTransparency = 1.0
+    tabs.Position = UDim2.new(0.022, 0, 0.196, 0)
+    tabs.Size = UDim2.new(0, 126, 0, 241)
+
     UIListLayout.Parent = tabs
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     UIListLayout.Padding = UDim.new(0, 5)
 
-    -- İçerik Alanı (Sağda)
-    mainarea.Parent = back
-    mainarea.Size = UDim2.new(1, -140, 1, -50)
-    mainarea.Position = UDim2.new(0, 130, 0, 50)
-    mainarea.BackgroundTransparency = 1
+    local window = {
+        Tabs = tabs,
+        MainArea = mainarea
+    }
+    return window
+end
 
-    local tabsList = {}
-
-    -- Sekme Ekleme Fonksiyonu
-    function UILib.AddTab(tabName)
-        local tabButton = Instance.new("TextButton")
-        local UICornerTab = Instance.new("UICorner")
-        local tabContent = Instance.new("Frame")
-
-        -- Sekme Butonu
-        tabButton.Parent = tabs
-        tabButton.Size = UDim2.new(1, -10, 0, 35)
-        tabButton.Text = tabName
-        tabButton.Font = Enum.Font.Michroma
-        tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-        tabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        tabButton.BorderSizePixel = 0
-        UICornerTab.Parent = tabButton
-
-        -- Sekme İçeriği
-        tabContent.Parent = mainarea
-        tabContent.Size = UDim2.new(1, 0, 1, 0)
-        tabContent.BackgroundTransparency = 1
-        tabContent.Visible = false
-
-        -- Sekmeye Tıklayınca İçeriği Göster
-        tabButton.MouseButton1Click:Connect(function()
-            for _, tab in pairs(tabsList) do
-                tab.Content.Visible = false
-            end
-            tabContent.Visible = true
-        end)
-
-        table.insert(tabsList, {Button = tabButton, Content = tabContent})
-
-        -- İçeriğe Buton Ekleme
-        function tabContent:AddButton(buttonText, callback)
-            local button = Instance.new("TextButton")
-            local UICornerBtn = Instance.new("UICorner")
-
-            button.Parent = tabContent
-            button.Size = UDim2.new(1, -20, 0, 40)
-            button.Position = UDim2.new(0, 10, 0, 10)
-            button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-            button.Text = buttonText
-            button.Font = Enum.Font.Michroma
-            button.TextColor3 = Color3.fromRGB(255, 255, 255)
-            button.TextSize = 14
-            UICornerBtn.Parent = button
-
-            button.MouseButton1Click:Connect(callback)
-        end
-
-        return tabContent
-    end
-
-    return UILib
+function UILib.AddTab(window, tabName)
+    local tabButton = Instance.new("TextButton")
+    local UICorner = Instance.new("UICorner")
+    
+    tabButton.Parent = window.Tabs
+    tabButton.BackgroundColor3 = Color3.fromRGB(14, 14, 14)
+    tabButton.Size = UDim2.new(0, 111, 0, 30)
+    tabButton.Font = Enum.Font.Michroma
+    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    tabButton.TextSize = 20
+    tabButton.TextWrapped = true
+    tabButton.Text = tabName
+    UICorner.Parent = tabButton
+    
+    return tabButton
 end
 
 return UILib
