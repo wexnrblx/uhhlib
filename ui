@@ -10,41 +10,33 @@ function UILib.CreateWindow(title)
     local UICornerTabButtons = Instance.new("UICorner")
     local UIListLayout = Instance.new("UIListLayout")
 
-    -- Ebeveyn
+    -- GUI Ana Yapısı
     ScreenGui.Parent = game.CoreGui
-
-    -- Ana Pencere
     MainFrame.Parent = ScreenGui
-    MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
     MainFrame.Size = UDim2.new(0, 450, 0, 300)
+    MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     MainFrame.Active = true
     MainFrame.Draggable = true
-
     UICorner.Parent = MainFrame
 
-    -- Sekme Tutucu
+    -- Sekme Alanı
     TabHolder.Parent = MainFrame
-    TabHolder.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     TabHolder.Size = UDim2.new(1, 0, 0.85, 0)
     TabHolder.Position = UDim2.new(0, 0, 0.15, 0)
-
+    TabHolder.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     UICornerTab.Parent = TabHolder
 
-    -- Sekme Butonları Paneli
+    -- Sekme Butonları Alanı
     TabButtons.Parent = MainFrame
-    TabButtons.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     TabButtons.Size = UDim2.new(1, 0, 0.15, 0)
-
+    TabButtons.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     UICornerTabButtons.Parent = TabButtons
-
     UIListLayout.Parent = TabButtons
     UIListLayout.FillDirection = Enum.FillDirection.Horizontal
-    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     UIListLayout.Padding = UDim.new(0, 5)
 
+    -- Sekme Sistemi
     local Tabs = {}
 
     function Tabs:AddTab(tabName)
@@ -52,12 +44,12 @@ function UILib.CreateWindow(title)
         local Button = Instance.new("TextButton")
         local UIListLayoutTab = Instance.new("UIListLayout")
 
-        -- Tab Butonu
+        -- Sekme Butonu
         Button.Parent = TabButtons
         Button.Size = UDim2.new(0, 100, 1, 0)
         Button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
-        Button.Font = Enum.Font.GothamBold
         Button.Text = tabName
+        Button.Font = Enum.Font.GothamBold
         Button.TextColor3 = Color3.fromRGB(255, 255, 255)
         Button.TextSize = 14
 
@@ -68,12 +60,9 @@ function UILib.CreateWindow(title)
         Tab.CanvasSize = UDim2.new(0, 0, 0, 0)
         Tab.ScrollBarThickness = 5
         Tab.Visible = false
-
         UIListLayoutTab.Parent = Tab
-        UIListLayoutTab.SortOrder = Enum.SortOrder.LayoutOrder
-        UIListLayoutTab.Padding = UDim.new(0, 5)
 
-        -- Sekmeye Tıklayınca Açılma
+        -- Sekmeye Tıklama İşlemi
         Button.MouseButton1Click:Connect(function()
             for _, child in pairs(TabHolder:GetChildren()) do
                 if child:IsA("ScrollingFrame") then
@@ -104,7 +93,7 @@ function UILib.CreateWindow(title)
         return Section
     end
 
-    return Tabs
+    return Tabs  -- ✅ HATA BURADAYDI, "Tabs" return edilmezse çağrılamaz!
 end
 
 return UILib
