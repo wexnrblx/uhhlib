@@ -3,13 +3,14 @@ local UILib = {}
 function UILib.CreateWindow(title)
     local ScreenGui = Instance.new("ScreenGui")
     local Frame = Instance.new("Frame")
+    local Frame_2 = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
+    local ScrollingFrame = Instance.new("ScrollingFrame")
+    local UIListLayout = Instance.new("UIListLayout")
     local TOP = Instance.new("Frame")
     local uilibname = Instance.new("TextLabel")
     local closebutton = Instance.new("TextButton")
     local blankcizgi = Instance.new("Frame")
-    local ScrollingFrame = Instance.new("ScrollingFrame")
-    local UIListLayout = Instance.new("UIListLayout")
 
     ScreenGui.Parent = game.CoreGui
 
@@ -17,20 +18,42 @@ function UILib.CreateWindow(title)
     Frame.AnchorPoint = Vector2.new(0.5, 0.5)
     Frame.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
     Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Frame.Size = UDim2.new(0, 440, 0, 300)
+    Frame.Size = UDim2.new(0, 438, 0, 245)
     Frame.Active = true
-    Frame.Draggable = true 
+    Frame.Draggable = true
 
-    UICorner.Parent = Frame
+    Frame_2.Parent = Frame
+    Frame_2.AnchorPoint = Vector2.new(0.5, 0.5)
+    Frame_2.BackgroundColor3 = Color3.fromRGB(27, 27, 27)
+    Frame_2.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Frame_2.Size = UDim2.new(0, 428, 0, 237)
 
+    UICorner.Parent = Frame_2
+
+    -- **ScrollingFrame (Buton Alanı)**
+    ScrollingFrame.Parent = Frame_2
+    ScrollingFrame.BackgroundTransparency = 1
+    ScrollingFrame.Position = UDim2.new(0, 0, 0.139, 0)
+    ScrollingFrame.Size = UDim2.new(0, 428, 0, 204)
+    ScrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    ScrollingFrame.ScrollBarThickness = 5
+    ScrollingFrame.ClipsDescendants = true
+
+    -- **UIListLayout (Butonları Düzenleme)**
+    UIListLayout.Parent = ScrollingFrame
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0, 5)
+
+    -- **Üst Kısım**
     TOP.Parent = Frame
-    TOP.BackgroundTransparency = 1.000
-    TOP.Size = UDim2.new(1, 0, 0, 36)
+    TOP.BackgroundTransparency = 1
+    TOP.Size = UDim2.new(0, 428, 0, 36)
 
     uilibname.Parent = TOP
-    uilibname.BackgroundTransparency = 1.000
+    uilibname.BackgroundTransparency = 1
     uilibname.Position = UDim2.new(0.03, 0, 0.3, 0)
-    uilibname.Size = UDim2.new(0, 120, 0, 18)
+    uilibname.Size = UDim2.new(0, 97, 0, 18)
     uilibname.Font = Enum.Font.GothamBold
     uilibname.Text = title
     uilibname.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -38,8 +61,8 @@ function UILib.CreateWindow(title)
     uilibname.TextXAlignment = Enum.TextXAlignment.Left
 
     closebutton.Parent = TOP
-    closebutton.BackgroundTransparency = 1.000
-    closebutton.Position = UDim2.new(0.93, 0, 0.08, 0)
+    closebutton.BackgroundTransparency = 1
+    closebutton.Position = UDim2.new(0.93, 0, 0.2, 0)
     closebutton.Size = UDim2.new(0, 29, 0, 26)
     closebutton.Font = Enum.Font.GothamBold
     closebutton.Text = "X"
@@ -53,38 +76,24 @@ function UILib.CreateWindow(title)
     blankcizgi.AnchorPoint = Vector2.new(0.5, 0.5)
     blankcizgi.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
     blankcizgi.Position = UDim2.new(0.5, 0, 1, 0)
-    blankcizgi.Size = UDim2.new(1, 0, 0, 2)
-
-    -- **ScrollingFrame (Taşmayı Engellemek İçin)**
-    ScrollingFrame.Parent = Frame
-    ScrollingFrame.BackgroundTransparency = 1.000
-    ScrollingFrame.Size = UDim2.new(1, -10, 1, -50)
-    ScrollingFrame.Position = UDim2.new(0, 5, 0, 40)
-    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-    ScrollingFrame.ScrollBarThickness = 5
-    ScrollingFrame.ClipsDescendants = true
-    ScrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y -- **Butonlar arttıkça kaydırma alanı genişleyecek**
-
-    -- **UIListLayout (Butonların Otomatik Sıralanması)**
-    UIListLayout.Parent = ScrollingFrame
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Padding = UDim.new(0, 5)
-    UIListLayout.FillDirection = Enum.FillDirection.Vertical
+    blankcizgi.Size = UDim2.new(0, 428, 0, 2)
 
     local Window = {}
     Window.ScrollingFrame = ScrollingFrame
 
+    -- **Buton Ekleme Fonksiyonu**
     function Window:AddButton(text, callback)
         local Button = Instance.new("TextButton")
         local UICorner = Instance.new("UICorner")
 
         Button.Parent = ScrollingFrame
         Button.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
-        Button.Size = UDim2.new(0.95, 0, 0, 40) -- **Genişliği orantılı yapıldı**
+        Button.Size = UDim2.new(0.95, 0, 0, 46)
         Button.Font = Enum.Font.GothamBold
         Button.Text = text
         Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-        Button.TextSize = 14.000
+        Button.TextSize = 14
+        Button.TextWrapped = true
         Button.LayoutOrder = #ScrollingFrame:GetChildren()
         Button.MouseButton1Click:Connect(callback)
 
