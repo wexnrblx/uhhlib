@@ -1,8 +1,10 @@
 local UILib = {}
 
 function UILib.CreateWindow(title)
+    -- GUI Yapısı
     local ScreenGui = Instance.new("ScreenGui")
     local MainFrame = Instance.new("Frame")
+    local TopBar = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
     local TabHolder = Instance.new("Frame")
     local TabButtons = Instance.new("Frame")
@@ -10,21 +12,40 @@ function UILib.CreateWindow(title)
     local UICornerTabButtons = Instance.new("UICorner")
     local UIListLayout = Instance.new("UIListLayout")
     local UIListLayoutContent = Instance.new("UIListLayout")
+    local TabList = {}
 
     -- GUI Ana Yapısı
     ScreenGui.Parent = game.CoreGui
     MainFrame.Parent = ScreenGui
     MainFrame.Size = UDim2.new(0, 600, 0, 350)
     MainFrame.Position = UDim2.new(0.5, -300, 0.5, -175)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     MainFrame.Active = true
     MainFrame.Draggable = true
     UICorner.Parent = MainFrame
 
+    -- Üst Bar
+    TopBar.Parent = MainFrame
+    TopBar.Size = UDim2.new(1, 0, 0, 40)
+    TopBar.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+    UICorner.Parent = TopBar
+
+    local Title = Instance.new("TextLabel")
+    Title.Parent = TopBar
+    Title.Text = title
+    Title.Size = UDim2.new(1, -100, 1, 0)
+    Title.BackgroundTransparency = 1
+    Title.Font = Enum.Font.GothamBold
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 18
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.TextYAlignment = Enum.TextYAlignment.Center
+
     -- Sekme Butonları Alanı (Solda)
     TabButtons.Parent = MainFrame
     TabButtons.Size = UDim2.new(0, 120, 1, 0)
-    TabButtons.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    TabButtons.Position = UDim2.new(0, 0, 0, 40)
+    TabButtons.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     UICornerTabButtons.Parent = TabButtons
     UIListLayout.Parent = TabButtons
     UIListLayout.FillDirection = Enum.FillDirection.Vertical
@@ -32,84 +53,75 @@ function UILib.CreateWindow(title)
 
     -- Sekme İçeriği Alanı (Sağda)
     TabContent.Parent = MainFrame
-    TabContent.Size = UDim2.new(1, -120, 1, 0)
-    TabContent.Position = UDim2.new(0, 120, 0, 0)
-    TabContent.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    TabContent.Size = UDim2.new(1, -120, 1, -40)
+    TabContent.Position = UDim2.new(0, 120, 0, 40)
+    TabContent.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     UICorner.Parent = TabContent
     UIListLayoutContent.Parent = TabContent
     UIListLayoutContent.FillDirection = Enum.FillDirection.Vertical
     UIListLayoutContent.Padding = UDim.new(0, 5)
 
     -- Sekme Sistemi
-    local Tabs = {}
-
-    function Tabs:AddTab(tabName)
-        local Tab = Instance.new("ScrollingFrame")
-        local Button = Instance.new("TextButton")
-        local UIListLayoutTab = Instance.new("UIListLayout")
+    function UILib.AddTab(tabName)
+        local TabButton = Instance.new("TextButton")
+        local TabContentFrame = Instance.new("Frame")
+        local UICornerButton = Instance.new("UICorner")
 
         -- Sekme Butonu
-        Button.Parent = TabButtons
-        Button.Size = UDim2.new(1, 0, 0, 40)
-        Button.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-        Button.Text = tabName
-        Button.Font = Enum.Font.GothamBold
-        Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-        Button.TextSize = 14
-        Button.TextButtonMode = Enum.TextButtonMode.ContextMenu
-        Button.AutoButtonColor = false
+        TabButton.Parent = TabButtons
+        TabButton.Size = UDim2.new(1, 0, 0, 40)
+        TabButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        TabButton.Text = tabName
+        TabButton.Font = Enum.Font.GothamBold
+        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TabButton.TextSize = 14
+        TabButton.TextButtonMode = Enum.TextButtonMode.ContextMenu
+        TabButton.AutoButtonColor = false
+
+        UICornerButton.Parent = TabButton
 
         -- Sekme İçeriği
-        Tab.Parent = TabContent
-        Tab.Size = UDim2.new(1, 0, 1, 0)
-        Tab.BackgroundTransparency = 1
-        Tab.Visible = false
-        Tab.ScrollBarThickness = 5
-        UIListLayoutTab.Parent = Tab
+        TabContentFrame.Parent = TabContent
+        TabContentFrame.Size = UDim2.new(1, 0, 1, 0)
+        TabContentFrame.BackgroundTransparency = 1
+        TabContentFrame.Visible = false
 
         -- Sekmeye Tıklama İşlemi
-        Button.MouseButton1Click:Connect(function()
-            for _, child in pairs(TabContent:GetChildren()) do
-                if child:IsA("ScrollingFrame") then
-                    child.Visible = false
+        TabButton.MouseButton1Click:Connect(function()
+            for _, frame in pairs(TabContent:GetChildren()) do
+                if frame:IsA("Frame") then
+                    frame.Visible = false
                 end
             end
-            Tab.Visible = true
+            TabContentFrame.Visible = true
         end)
 
-        local Section = {}
-        function Section:AddButton(btnText, callback)
-            local Button = Instance.new("TextButton")
-            local UICornerButton = Instance.new("UICorner")
+        -- TabList'e Ekle
+        table.insert(TabList, {Button = TabButton, Content = TabContentFrame})
 
-            Button.Parent = Tab
-            Button.Size = UDim2.new(0.9, 0, 0, 40)
-            Button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+        -- İçerik Ekleme Fonksiyonu
+        function TabContentFrame:AddButton(buttonText, callback)
+            local Button = Instance.new("TextButton")
+            local UICornerBtn = Instance.new("UICorner")
+
+            Button.Parent = TabContentFrame
+            Button.Size = UDim2.new(1, -20, 0, 40)
+            Button.Position = UDim2.new(0, 10, 0, 10)
+            Button.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+            Button.Text = buttonText
             Button.Font = Enum.Font.GothamBold
-            Button.Text = btnText
             Button.TextColor3 = Color3.fromRGB(255, 255, 255)
             Button.TextSize = 14
 
-            UICornerButton.Parent = Button
+            UICornerBtn.Parent = Button
 
             Button.MouseButton1Click:Connect(callback)
         end
 
-        return Section
+        return TabContentFrame
     end
 
-    -- Başlangıçta ilk sekmeyi göster
-    function Tabs:SelectTab(tabName)
-        for _, button in pairs(TabButtons:GetChildren()) do
-            if button:IsA("TextButton") then
-                if button.Text == tabName then
-                    button.MouseButton1Click:Fire()
-                end
-            end
-        end
-    end
-
-    return Tabs
+    return UILib
 end
 
 return UILib
